@@ -102,7 +102,6 @@ prototype(NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem) < prototype(Neo
     renderer = afx`
         <div class="neos-row-fluid">
             <div class="neos-span9 node-tree--item" style="padding-left:0 !important">
-                <i class="fa fa-file-o" aria-hidden="true"></i>
                 <i class={props.item.icon} ></i> {props.item.title}
             </div>
             <div class="neos-span3" style="text-align:right">
