@@ -2,6 +2,8 @@
 
 NeosRulez.Acl provides the missing access control list for Neos CMS. It allows the administration of access rights for backend- and also for frontend users via the Neos backend.
 
+![Acl](https://raw.githubusercontent.com/patriceckhart/NeosRulez.Acl/master/Preview.png)
+
 ## Installation
 
 The NeosRulez.Acl package is listed on packagist (https://packagist.org/packages/neosrulez/acl) - therefore you don't have to include the package in your "repositories" entry any more.
