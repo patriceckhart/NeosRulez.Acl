@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.Acl" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="content.description" xml:space="preserve">
+				<source>Beschreibung</source>
+			</trans-unit>
+            <trans-unit id="content.nodeTree" xml:space="preserve">
+				<source>Seitenbaum</source>
+			</trans-unit>
+            <trans-unit id="content.saveChanges" xml:space="preserve">
+				<source>Änderungen speichern</source>
+			</trans-unit>
+            <trans-unit id="content.cancel" xml:space="preserve">
+				<source>Abbrechen</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

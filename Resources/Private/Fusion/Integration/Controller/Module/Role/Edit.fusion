@@ -1,0 +1,6 @@
+NeosRulez.Acl.Module.RoleController.edit = NeosRulez.Acl:Module.RoleController.Edit
+
+prototype(NeosRulez.Acl:Module.RoleController.Edit) < prototype(NeosRulez.Acl:Module.RoleController.New) {
+
+    edit = true
+}

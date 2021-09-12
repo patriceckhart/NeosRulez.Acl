@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="NeosRulez.Acl" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="content.name" xml:space="preserve">
+				<source>Name</source>
+			</trans-unit>
+            <trans-unit id="content.parentRoles" xml:space="preserve">
+				<source>Übergeordnete Rollen</source>
+			</trans-unit>
+            <trans-unit id="content.created" xml:space="preserve">
+				<source>Erstellt</source>
+			</trans-unit>
+            <trans-unit id="content.createNew" xml:space="preserve">
+				<source>Neue Rolle erstellen</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

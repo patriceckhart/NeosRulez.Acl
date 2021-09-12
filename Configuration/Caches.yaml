@@ -1,0 +1,4 @@
+Flow_Security_Authorization_Privilege_Method:
+  frontend: 'NeosRulez\Acl\RoleEnforcement\SecurityAuthorizationPrivilegeMethodCacheFrontend'
+Flow_Aop_RuntimeExpressions:
+  frontend: 'NeosRulez\Acl\RoleEnforcement\AopRuntimeExpressionsCacheFrontend'

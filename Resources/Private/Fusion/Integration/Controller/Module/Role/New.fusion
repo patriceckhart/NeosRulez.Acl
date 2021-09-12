@@ -1,0 +1,204 @@
+NeosRulez.Acl.Module.RoleController.new = NeosRulez.Acl:Module.RoleController.New
+
+prototype(NeosRulez.Acl:Module.RoleController.New) < prototype(Neos.Fusion:Component) {
+
+    @context.pages = ${this.nodeTree}
+    renderer = afx`
+        <NeosRulez.Acl:Component.DefaultLayout>
+            <style>{"
+                .neos-controls input, .neos-controls select, .neos-controls textarea { width:100%; }
+                .neos-span6, .neos-span5, .neos-span7 { margin-bottom:0 !important; }
+                .neos-checkbox { display:block; width:100%; margin-top:5px !important; margin-bottom:5px !important; }
+                /*.node-tree, .node-tree--items, .node-tree--subitems { margin-left:20px !important; }*/
+                .node-tree--items { padding-left:20px !important; }
+                .node-tree--item { padding-top:10px !important; }
+                .node-tree--subitems { padding-left:20px !important; }
+                .node-tree li i, .node-tree--items li i, .node-tree--subitems li i { width:30px !important; }
+                .node-tree { margin-left:0 !important; }
+                legend { padding-top:30px !important; margin-bottom:0px !important; display:block !important; }
+            "}</style>
+            <Neos.Fusion.Form:Form form.target.action={props.edit ? 'update' : 'create'} form.data.role={role} >
+
+                <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.name')} field.name="role[name]" >
+                    <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.name')} />
+                </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                <Neos.Fusion.Form:Neos.BackendModule.FieldContainer label={I18n.translate('NeosRulez.Acl:Modules.Role.New:content.description')} field.name="role[description]" >
+                    <Neos.Fusion.Form:Input attributes.placeholder={I18n.translate('NeosRulez.Acl:Modules.Role.New:content.description')} />
+                </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+
+                <div class="neos-row-fluid">
+                    <fieldset class="neos-span5">
+                        <legend>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.parentRoles')}</legend>
+                        <NeosRulez.Acl:Module.RoleController.ParentRoles @if.render={roles} />
+                    </fieldset>
+
+                    <fieldset class="neos-span6 neos-offset1">
+                        <legend>{I18n.translate('NeosRulez.Acl:Modules.Role.New:content.nodeTree')}</legend>
+                        <NeosRulez.Acl:Module.RoleController.NodeTree @if.render={nodes} />
+                    </fieldset>
+                </div>
+
+                <div class="neos-footer">
+
+                    <Neos.Fusion.Form:Button attributes.class="neos-button neos-button-primary">
+                        {props.edit ? I18n.translate('NeosRulez.Acl:Modules.Role.New:content.saveChanges') : I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.createNew')}
+                    </Neos.Fusion.Form:Button>
+
+                    <Neos.Fusion:Link.Action class="neos-button neos-button-default" href.action="index" >
+                        {I18n.translate('NeosRulez.Acl:Modules.Role.New:content.cancel')}
+                    </Neos.Fusion:Link.Action>
+
+                </div>
+
+            </Neos.Fusion.Form:Form>
+            <script src={StaticResource.uri('NeosRulez.Acl', 'Public/JavaScript/Module.min.js')}></script>
+        </NeosRulez.Acl:Component.DefaultLayout>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.NodeTree) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <ul class="node-tree">
+            <li>
+                <div class="neos-row-fluid">
+                    <div class="neos-span9">
+                        &nbsp;
+                    </div>
+                    <div class="neos-span3" style="text-align:right">
+                        <span style="min-width:22px;display:inline-block;margin-right:4px;cursor:pointer" class="btn--trigger" id="btn__show">
+                            <i class="far fa-eye"></i>
+                        </span>
+                        <span style="min-width:22px;display:inline-block;margin-right:2px;cursor:pointer" class="btn--trigger" id="btn__edit">
+                            <i class="fas fa-pen"></i>
+                        </span>
+                        <span style="min-width:22px;display:inline-block;margin-right:8px;cursor:pointer" class="btn--trigger" id="btn__remove">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem firstNode={nodes[0]} />
+                <ul class="node-tree--items">
+                    <Neos.Fusion:Loop items={nodes[0].children} itemName="node">
+                        <li>
+                            <NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem />
+                            <NeosRulez.Acl:Module.RoleController.NodeTree.SubItems @if.render={node.children} />
+                        </li>
+                    </Neos.Fusion:Loop>
+                </ul>
+            </li>
+        </ul>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem) < prototype(Neos.Fusion:Component) {
+
+    item = ${this.firstNode ? this.firstNode : node}
+
+    renderer = afx`
+        <div class="neos-row-fluid">
+            <div class="neos-span9 node-tree--item" style="padding-left:0 !important">
+                <i class="fa fa-file-o" aria-hidden="true"></i>
+                <i class={props.item.icon} ></i> {props.item.title}
+            </div>
+            <div class="neos-span3" style="text-align:right">
+                <div style="display:inline-block">
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[show][' + props.item.identifier + ']'} >
+                        <Neos.Fusion.Form:Checkbox field.value={props.item.identifier} attributes.data-parent={props.item.parent} attributes.data-id={props.item.identifier} attributes.class={props.firstNode ? false : 'btn--trigger checkbox checkbox--show'} attributes.checked={props.firstNode ? true : (privileges ? (privileges.show[props.item.identifier] ? true : false) : false)} attributes.onclick={props.firstNode ? 'this.checked=!this.checked;' : false} >
+                            &nbsp;
+                        </Neos.Fusion.Form:Checkbox>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                </div>
+                <div style="display:inline-block">
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[edit][' + props.item.identifier + ']'} >
+                        <Neos.Fusion.Form:Checkbox field.value={props.item.identifier} attributes.data-parent={props.item.parent} attributes.data-id={props.item.identifier} attributes.class="btn--trigger checkbox checkbox--edit" attributes.checked={privileges ? (privileges.edit[props.item.identifier] ? true : false) : false} >
+                            &nbsp;
+                        </Neos.Fusion.Form:Checkbox>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                </div>
+                <div style="display:inline-block">
+                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[remove][' + props.item.identifier + ']'} >
+                        <Neos.Fusion.Form:Checkbox field.value={props.item.identifier} attributes.data-parent={props.item.parent} attributes.data-id={props.item.identifier} attributes.class="btn--trigger checkbox checkbox--remove" attributes.checked={privileges ? (privileges.remove[props.item.identifier] ? true : false) : false} >
+                            &nbsp;
+                        </Neos.Fusion.Form:Checkbox>
+                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                </div>
+            </div>
+        </div>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.NodeTree.SubItems) < prototype(NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem) {
+
+    renderer = afx`
+        <ul class="node-tree--subitems">
+            <Neos.Fusion:Loop items={node.children} itemName="node">
+                <li>
+                    <NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem />
+                </li>
+            </Neos.Fusion:Loop>
+        </ul>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.PrivilegeTree) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <ul class="node-tree">
+            <li>
+                <NeosRulez.Acl:Module.RoleController.PrivilegeTree.PrivilegeItem firstNode={nodes[0]} />
+                <ul class="privilege-tree--items">
+                    <Neos.Fusion:Loop items={nodes[0].children} itemName="node">
+                        <li>
+                            <NeosRulez.Acl:Module.RoleController.PrivilegeTree.PrivilegeItem />
+                            <NeosRulez.Acl:Module.RoleController.PrivilegeTree.SubPrivilegeItems @if.render={node.children} />
+                        </li>
+                    </Neos.Fusion:Loop>
+                </ul>
+            </li>
+        </ul>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.PrivilegeTree.PrivilegeItem) < prototype(Neos.Fusion:Component) {
+
+    item = ${this.firstNode ? this.firstNode : node}
+
+    renderer = afx`
+        <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={props.item.parent ? 'role[' + props.item.parent + '][nodes]' : 'role[nodes]'} >
+            <Neos.Fusion.Form:Checkbox field.value={props.item.identifier}>
+                {props.item.title}
+            </Neos.Fusion.Form:Checkbox>
+        </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.PrivilegeTree.SubPrivilegeItems) < prototype(NeosRulez.Acl:Module.RoleController.PrivilegeTree.PrivilegeItem) {
+
+    renderer = afx`
+        <ul class="privilege-tree--subitems">
+            <Neos.Fusion:Loop items={node.children} itemName="node">
+                <li>
+                    <NeosRulez.Acl:Module.RoleController.PrivilegeTree.PrivilegeItem />
+                </li>
+            </Neos.Fusion:Loop>
+        </ul>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.ParentRoles) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <Neos.Fusion:Loop items={roles} itemName="role" itemKey="roleKey" >
+            <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'parentRoles[' + roleKey + ']'} >
+                <Neos.Fusion.Form:Checkbox field.value="1" attributes.checked={parentRoles[String.toString(role)]} >
+                    {role}
+                </Neos.Fusion.Form:Checkbox>
+            </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+        </Neos.Fusion:Loop>
+    `
+}

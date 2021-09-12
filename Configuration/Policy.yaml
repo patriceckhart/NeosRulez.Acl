@@ -1,0 +1,62 @@
+privilegeTargets:
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+    'NeosRulez.Acl:Backend.Module.Role':
+      matcher: 'method(NeosRulez\Acl\Controller\Module\RoleController->.*Action())'
+  'Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege':
+    'NeosRulez.Acl:EditAllNodes':
+      matcher: 'TRUE'
+  'Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege':
+    'NeosRulez.Acl:CreateAllNodes':
+      matcher: 'TRUE'
+  'Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege':
+    'NeosRulez.Acl:RemoveAllNodes':
+      matcher: 'TRUE'
+  'Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege':
+    'NeosRulez.Acl:ReadAllNodes':
+      matcher: 'TRUE'
+roles:
+  'Neos.Neos:Administrator':
+    privileges:
+      -
+        privilegeTarget: 'NeosRulez.Acl:EditAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:CreateAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:RemoveAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:ReadAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:Backend.Module.Role'
+        permission: GRANT
+  'Neos.Neos:Editor':
+    privileges:
+      -
+        privilegeTarget: 'NeosRulez.Acl:EditAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:CreateAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:RemoveAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:ReadAllNodes'
+        permission: GRANT
+  'NeosRulez.Acl:AbstractEditor':
+    privileges:
+      -
+        privilegeTarget: 'NeosRulez.Acl:EditAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:CreateAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:RemoveAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:ReadAllNodes'
+        permission: GRANT

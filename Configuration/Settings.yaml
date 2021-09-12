@@ -1,0 +1,24 @@
+Neos:
+  Neos:
+    userInterface:
+      translation:
+        autoInclude:
+          NeosRulez.Acl:
+            - Main
+            - Modules/*
+    modules:
+      administration:
+        submodules:
+          users:
+            icon: 'fas fa-user'
+          roles:
+            label: NeosRulez.Acl:Main:ui.label
+            controller: 'NeosRulez\Acl\Controller\Module\RoleController'
+            description: NeosRulez.Acl:Main:ui.description
+            icon: 'fas fa-users'
+            position: 'after users'
+            actions:
+              index:
+                label: NeosRulez.Acl:Main:ui.label
+                title: NeosRulez.Acl:Main:ui.label
+            privilegeTarget: 'NeosRulez.Acl:Backend.Module.Role'

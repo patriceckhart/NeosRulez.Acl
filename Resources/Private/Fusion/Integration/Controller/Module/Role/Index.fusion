@@ -1,0 +1,64 @@
+NeosRulez.Acl.Module.RoleController.index = NeosRulez.Acl:Module.RoleController.Index
+
+prototype(NeosRulez.Acl:Module.RoleController.Index) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <NeosRulez.Acl:Component.DefaultLayout>
+
+            <p @if.render={!roles} >No roles available.</p>
+
+            <table @if.render={roles} class="neos-table">
+
+                <thead>
+                    <tr>
+                        <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.name')}</td>
+                        <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.parentRoles')}</td>
+                        <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.created')}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <Neos.Fusion:Loop items={roles} >
+                        <tr>
+                            <td>
+                                {item.name}
+                                <small style="display:block;color:#7b7b7b;line-height:1rem;margin-top:-5px;margin-bottom:10px">{item.internalRoleName}</small>
+                            </td>
+                            <td>
+                                <div style="line-height:1.3rem;margin-top:10px;margin-bottom:10px">
+                                    <Neos.Fusion:Loop @if.render={item.parentRolesArray} items={item.parentRolesArray} itemName="parentRole">
+                                        <div style="display:block;margin-right:2px">
+                                            <span class="neos-badge">{parentRole}</span>
+                                        </div>
+                                    </Neos.Fusion:Loop>
+                                </div>
+                            </td>
+                            <td>{Date.format(item.created, 'Y-m-d H:i')}</td>
+                            <td class="neos-action">
+                                <div class="neos-pull-right">
+                                    <Neos.Fusion:Link.Action class="neos-button neos-button-primary" href.action="edit" href.arguments={{role: item}}>
+                                        <i class="fas fa-pen"></i>
+                                    </Neos.Fusion:Link.Action>
+                                    <Neos.Fusion:Link.Action class="neos-button neos-button-danger" href.action="delete" href.arguments={{role: item}}>
+                                        <i class="fas fa-trash"></i>
+                                    </Neos.Fusion:Link.Action>
+                                </div>
+                            </td>
+                        </tr>
+                    </Neos.Fusion:Loop>
+                </tbody>
+
+            </table>
+
+            <div class="neos-footer">
+
+                <Neos.Fusion:Link.Action class="neos-button neos-button-primary" href.action="new" >
+                    {I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.createNew')}
+                </Neos.Fusion:Link.Action>
+
+            </div>
+
+        </NeosRulez.Acl:Component.DefaultLayout>
+    `
+}
