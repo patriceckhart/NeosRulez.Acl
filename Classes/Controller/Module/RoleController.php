@@ -6,11 +6,18 @@ use Neos\Flow\Mvc\Controller\ActionController;
 use NeosRulez\Acl\Domain\Model\Role;
 use Neos\Flow\Security\Policy\PolicyService;
 use Neos\Fusion\View\FusionView;
+use Neos\Fusion\Core\Cache\ContentCache;
 
 class RoleController extends ActionController
 {
 
     protected $defaultViewObjectName = FusionView::class;
+
+    /**
+     * @Flow\Inject
+     * @var ContentCache
+     */
+    protected $contentCache;
 
     /**
      * @Flow\Inject
@@ -84,6 +91,7 @@ class RoleController extends ActionController
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
         $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $this->nodeService->getDeniedNodes($privileges['show']), $this->nodeService->getDeniedNodes($privileges['edit']), $this->nodeService->getDeniedNodes($privileges['remove'])));
         $this->roleRepository->add($role);
+        $this->flushContentCache();
         $this->redirect('index');
     }
 
@@ -111,6 +119,7 @@ class RoleController extends ActionController
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
         $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $this->nodeService->getDeniedNodes($privileges['show']), $this->nodeService->getDeniedNodes($privileges['edit']), $this->nodeService->getDeniedNodes($privileges['remove'])));
         $this->roleRepository->update($role);
+        $this->flushContentCache();
         $this->redirect('index');
     }
 
@@ -122,7 +131,13 @@ class RoleController extends ActionController
     {
         $this->roleRepository->remove($role);
         $this->persistenceManager->persistAll();
+        $this->flushContentCache();
         $this->redirect('index');
+    }
+
+    protected function flushContentCache()
+    {
+        $this->contentCache->flush();
     }
 
 }
