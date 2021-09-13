@@ -26,6 +26,18 @@ class NodeService {
      */
     protected $entityManager;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\Acl\Domain\Repository\NodeRepository
+     */
+    protected $nodeRepository;
+
+    /**
+     * @Flow\Inject
+     * @var \Neos\Flow\Persistence\PersistenceManagerInterface
+     */
+    protected $persistenceManager;
+
 
     /**
      * @return array
@@ -64,12 +76,22 @@ class NodeService {
     }
 
     /**
-     * @return \Neos\ContentRepository\Domain\Service\Context
+     * @param string $kind
+     * @return void
      */
-    protected function createContext()
+    public function createAclNodes(string $kind = 'Neos.Neos:Document'):void
     {
-        $context = $this->contextFactory->create(array('workspaceName' => 'live'));
-        return $context;
+        $context = $this->contextFactory->create();
+        $siteNode = $context->getCurrentSiteNode();
+        $nodes = (new FlowQuery(array($siteNode)))->find('[instanceof ' . $kind . ']')->sort('_index', 'ASC')->get();
+        $this->nodeRepository->removeAll();
+        foreach ($nodes as $node) {
+            $aclNode = new \NeosRulez\Acl\Domain\Model\Node();
+            $aclNode->setNodeIdentifier($node->getIdentifier());
+            $aclNode->setKind($kind);
+            $this->nodeRepository->add($aclNode);
+            $this->persistenceManager->persistAll();
+        }
     }
 
     /**

@@ -73,10 +73,19 @@ class RoleGeneratorService {
 
                 array_push($role['parentRolesArray'], 'Neos.Neos:LivePublisher', 'Neos.Neos:RestrictedEditor', 'NeosRulez.Acl:AbstractEditor');
 
-                $deniedNodesShow = $this->nodeService->getDeniedNodes($role['privilegesArray']['show']);
-                $deniedNodesEdit = $this->nodeService->getDeniedNodes($role['privilegesArray']['edit']);
-                $deniedNodesRemove = $this->nodeService->getDeniedNodes($role['privilegesArray']['remove']);
-
+                $deniedNodesShow= [];
+                if(array_key_exists('show', $role['privilegesArray'])) {
+                    $deniedNodesShow = $this->nodeService->getDeniedNodes($role['privilegesArray']['show']);
+                }
+                $deniedNodesEdit = [];
+                if(array_key_exists('edit', $role['privilegesArray'])) {
+                    $deniedNodesEdit = $this->nodeService->getDeniedNodes($role['privilegesArray']['edit']);
+                }
+                $deniedNodesRemove = [];
+                if(array_key_exists('remove', $role['privilegesArray'])) {
+                    $deniedNodesRemove = $this->nodeService->getDeniedNodes($role['privilegesArray']['remove']);
+                }
+                
                 $privilegeItems['showDenied'] = [];
                 if(!empty($deniedNodesShow)) {
                     foreach ($deniedNodesShow as $deniedNodeShow) {

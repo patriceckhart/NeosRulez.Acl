@@ -88,6 +88,7 @@ class RoleController extends ActionController
      */
     public function createAction(Role $role, array $privileges, array $parentRoles):void
     {
+        $this->nodeService->createAclNodes();
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
         $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $this->nodeService->getDeniedNodes($privileges['show']), $this->nodeService->getDeniedNodes($privileges['edit']), $this->nodeService->getDeniedNodes($privileges['remove'])));
         $this->roleRepository->add($role);
@@ -101,6 +102,7 @@ class RoleController extends ActionController
      */
     public function editAction(Role $role):void
     {
+        $this->view->assign('nodeTypes', $this->nodeService->getNodeTypes());
         $this->view->assign('roles', $this->policyService->getRoles());
         $this->view->assign('parentRoles', $this->roleService->rolesToArray($role->getParentRoles()));
         $this->view->assign('nodes', $this->nodeService->getNodes());
@@ -116,6 +118,7 @@ class RoleController extends ActionController
      */
     public function updateAction(Role $role, array $privileges, array $parentRoles):void
     {
+        $this->nodeService->createAclNodes();
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
         $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $this->nodeService->getDeniedNodes($privileges['show']), $this->nodeService->getDeniedNodes($privileges['edit']), $this->nodeService->getDeniedNodes($privileges['remove'])));
         $this->roleRepository->update($role);
