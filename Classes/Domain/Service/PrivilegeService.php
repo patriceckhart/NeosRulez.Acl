@@ -17,15 +17,6 @@ class PrivilegeService {
         $privilegeItems = [];
         $result = '';
         if(!empty($privileges)) {
-            foreach ($showDeniedNodes as $showDeniedNode) {
-                $privilegeItems['showDenied'][] = $showDeniedNode;
-            }
-            foreach ($editDeniedNodes as $editDeniedNode) {
-                $privilegeItems['editDenied'][] = $editDeniedNode;
-            }
-            foreach ($removeDeniedNodes as $removeDeniedNode) {
-                $privilegeItems['removeDenied'][] = $removeDeniedNode;
-            }
             foreach ($privileges as $i => $privilege) {
                 foreach ($privilege as $privilegeItem) {
                     if($privilegeItem != '') {

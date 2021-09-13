@@ -52,6 +52,12 @@ class RoleGeneratorService {
      */
     protected $entityManager;
 
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\Acl\Domain\Service\NodeService
+     */
+    protected $nodeService;
+
 
     public function onConfigurationLoaded(&$configuration)
     {
@@ -67,7 +73,30 @@ class RoleGeneratorService {
 
                 array_push($role['parentRolesArray'], 'Neos.Neos:LivePublisher', 'Neos.Neos:RestrictedEditor', 'NeosRulez.Acl:AbstractEditor');
 
-                foreach ($role['privilegesArray'] as $i => $privileges) {
+                $deniedNodesShow = $this->nodeService->getDeniedNodes($role['privilegesArray']['show']);
+                $deniedNodesEdit = $this->nodeService->getDeniedNodes($role['privilegesArray']['edit']);
+                $deniedNodesRemove = $this->nodeService->getDeniedNodes($role['privilegesArray']['remove']);
+
+                $privilegeItems['showDenied'] = [];
+                if(!empty($deniedNodesShow)) {
+                    foreach ($deniedNodesShow as $deniedNodeShow) {
+                        $privilegeItems['showDenied'][] = $deniedNodeShow;
+                    }
+                }
+                $privilegeItems['editDenied'] = [];
+                if(!empty($deniedNodesEdit)) {
+                    foreach ($deniedNodesEdit as $deniedNodeEdit) {
+                        $privilegeItems['editDenied'][] = $deniedNodeEdit;
+                    }
+                }
+                $privilegeItems['removeDenied'] = [];
+                if(!empty($deniedNodesRemove)) {
+                    foreach ($deniedNodesRemove as $deniedNodeRemove) {
+                        $privilegeItems['removeDenied'][] = $deniedNodeRemove;
+                    }
+                }
+
+                foreach ($privilegeItems as $i => $privileges) {
                     if($i == 'showDenied') {
                         foreach ($privileges as $privilegeIterator => $privilege) {
                             $customConfiguration['privilegeTargets']['Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege'][$role['internalRoleName'] . '.Show' . $privilegeIterator] = $this->privilegeService->createPrivilegeTarget($privilege);

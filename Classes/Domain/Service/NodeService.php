@@ -5,7 +5,6 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Eel\FlowQuery\FlowQuery;
 use Neos\Eel\FlowQuery\Operations;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
-use NeosRulez\Acl\Domain\Model\Role;
 
 class NodeService {
 
@@ -20,6 +19,13 @@ class NodeService {
      * @var \Neos\ContentRepository\Domain\Service\NodeTypeManager
      */
     protected $nodeTypeManager;
+
+    /**
+     * @Flow\Inject
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    protected $entityManager;
+
 
     /**
      * @return array
@@ -39,13 +45,31 @@ class NodeService {
      */
     public function getDeniedNodes(array $grantedNodes):array
     {
+        $allowedNodes = [];
         $result = [];
-        foreach ($grantedNodes as $grantedNodeIdentifier => $grantedNode) {
-            if($grantedNode == '') {
-                $result[] = $grantedNodeIdentifier;
+        foreach ($grantedNodes as $grantedNode) {
+            if($grantedNode != '') {
+                $allowedNodes[$grantedNode] = true;
+            }
+        }
+        $connection = $this->entityManager->getConnection();
+        $nodes = $connection->executeQuery('SELECT * FROM neosrulez_acl_domain_model_node WHERE kind="Neos.Neos:Document"')->fetchAll();
+        foreach ($nodes as $node) {
+            $nodeIdentifier = $node['nodeidentifier'];
+            if(!array_key_exists($nodeIdentifier, $allowedNodes)) {
+                $result[] = $nodeIdentifier;
             }
         }
         return $result;
+    }
+
+    /**
+     * @return \Neos\ContentRepository\Domain\Service\Context
+     */
+    protected function createContext()
+    {
+        $context = $this->contextFactory->create(array('workspaceName' => 'live'));
+        return $context;
     }
 
     /**
@@ -88,18 +112,10 @@ class NodeService {
             }
         }
 
-        $icon = array_key_exists('ui', $nodeTypeConfig) ? (array_key_exists('icon', $nodeTypeConfig['ui']) ? $nodeTypeConfig['ui']['icon'] : false) : false;
-        $pos1 = strpos($icon, '-o');
-        if ($pos1 === false) {
-            $icon = str_replace('icon-', 'fas fa-', $icon);
-        } else {
-            $icon = str_replace('-o', '', str_replace('icon-', 'far fa-', $icon));
-        }
-
         $item = [
             'identifier' => $node->getIdentifier(),
             'title' => $node->hasProperty('title') ? $node->getProperty('title') : false,
-            'icon' => $icon,
+            'icon' => $this->getNodeTypeIcon($nodeTypeConfig),
             'parent' => $parent,
             'children' => $childs
         ];
@@ -134,13 +150,36 @@ class NodeService {
         $nodeTypes = $this->nodeTypeManager->getNodeTypes();
         foreach ($nodeTypes as $nodeType) {
             $nodeTypeName = $nodeType->getName();
-            $pos1 = strpos($nodeTypeName, 'Neos.Neos');
-            $pos2 = strpos($nodeTypeName, 'Mixin');
-            if ($pos1 === false && $pos2 === false && $nodeTypeName != 'unstructured') {
-                $result[] = $nodeType;
+            $superTypes = array_key_exists('superTypes', $nodeType->getLocalConfiguration()) ? $nodeType->getLocalConfiguration()['superTypes'] : [];
+            if (array_key_exists('Neos.Neos:Content', $superTypes)) {
+                $pos1 = strpos($nodeTypeName, 'Neos.Neos');
+                $pos2 = strpos($nodeTypeName, 'Mixin');
+                if ($pos1 === false && $pos2 === false && $nodeTypeName != 'unstructured') {
+                    $result[] = [
+                        'name' => $nodeTypeName,
+                        'icon' => array_key_exists('ui', $nodeType->getLocalConfiguration()) ? ($nodeType->getLocalConfiguration()['ui'] != null ? $this->getNodeTypeIcon($nodeType->getLocalConfiguration()) : []) : [],
+                        'label' => array_key_exists('ui', $nodeType->getLocalConfiguration()) ? $nodeType->getLocalConfiguration()['ui'] != null ? array_key_exists('label', $nodeType->getLocalConfiguration()['ui']) ? $nodeType->getLocalConfiguration()['ui']['label'] : false : false : false
+                    ];
+                }
             }
         }
         return $result;
+    }
+
+    /**
+     * @param array $nodeTypeConfig
+     * @return string
+     */
+    public function getNodeTypeIcon(array $nodeTypeConfig):string
+    {
+        $icon = array_key_exists('ui', $nodeTypeConfig) ? (array_key_exists('icon', $nodeTypeConfig['ui']) ? $nodeTypeConfig['ui']['icon'] : '') : '';
+        $pos1 = strpos($icon, '-o');
+        if ($pos1 === false) {
+            $icon = str_replace('icon-', 'fas fa-', $icon);
+        } else {
+            $icon = str_replace('-o', '', str_replace('icon-', 'far fa-', $icon));
+        }
+        return $icon;
     }
 
 }

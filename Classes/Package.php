@@ -6,6 +6,7 @@ use Neos\Flow\Package\Package as BasePackage;
 use Neos\Flow\Core\Bootstrap;
 use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\Flow\Security\Policy\PolicyService;
+use NeosRulez\Acl\Service\NodeGeneratorService;
 use NeosRulez\Acl\Service\RoleGeneratorService;
 
 class Package extends BasePackage {
@@ -16,6 +17,7 @@ class Package extends BasePackage {
      */
     public function boot(Bootstrap $bootstrap) {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
+        $dispatcher->connect(Workspace::class, 'afterNodePublishing', NodeGeneratorService::class, 'onAfterNodePublishing');
         $dispatcher->connect(PolicyService::class, 'configurationLoaded', RoleGeneratorService::class, 'onConfigurationLoaded');
     }
 
