@@ -46,7 +46,7 @@ class NodeService {
     {
         $context = $this->contextFactory->create();
         $siteNode = $context->getCurrentSiteNode();
-        $nodes = (new FlowQuery(array($siteNode)))->find('[instanceof Neos.Neos:Document]')->context(array('workspaceName' => 'live'))->sort('_index', 'ASC')->get();
+        $nodes = (new FlowQuery(array($siteNode)))->find('[instanceof Neos.Neos:Document]')->sort('_index', 'ASC')->get();
         $result = $this->buildNodeTree($nodes, $siteNode);
         return $result;
     }
@@ -106,7 +106,11 @@ class NodeService {
         $nodeTree[$siteNode->getIdentifier()] = $this->createNodeItem($siteNode);
         if(!empty($nodes)) {
             foreach ($nodes as $node) {
-                $nodeTree[] = $this->createNodeItem($node, $node->getParent()->getIdentifier());
+                if(@$node->getParent()) {
+                    if(@$node->getParent()->getIdentifier()) {
+                        $nodeTree[] = $this->createNodeItem($node, $node->getParent()->getIdentifier());
+                    }
+                }
             }
         }
         if(!empty($nodeTree)) {
