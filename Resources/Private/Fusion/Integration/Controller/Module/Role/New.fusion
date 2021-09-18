@@ -9,11 +9,11 @@ prototype(NeosRulez.Acl:Module.RoleController.New) < prototype(Neos.Fusion:Compo
                 .neos-controls input, .neos-controls select, .neos-controls textarea { width:100%; }
                 .neos-span6, .neos-span5, .neos-span7 { margin-bottom:0 !important; }
                 .neos-checkbox { display:block; width:100%; margin-top:5px !important; margin-bottom:5px !important; }
-                /*.node-tree, .node-tree--items, .node-tree--subitems { margin-left:20px !important; }*/
                 .node-tree--items { padding-left:20px !important; }
                 .node-tree--item { padding-top:10px !important; }
                 .node-tree--subitems { padding-left:20px !important; }
-                .node-tree li i, .node-tree--items li i, .node-tree--subitems li i { width:30px !important; }
+                .nodetypes--items li { margin-top:10px !important; }
+                .node-tree li i, .node-tree--items li i, .node-tree--subitems li i, .nodetypes--items li i { width:20px !important; text-align:left !important; }
                 .node-tree { margin-left:0 !important; }
                 legend { padding-top:30px !important; margin-bottom:0px !important; display:block !important; }
             "}</style>
@@ -60,6 +60,9 @@ prototype(NeosRulez.Acl:Module.RoleController.New) < prototype(Neos.Fusion:Compo
 prototype(NeosRulez.Acl:Module.RoleController.NodeTree) < prototype(Neos.Fusion:Component) {
 
     renderer = afx`
+        <style>{"
+            .is-hidden::after { position:absolute; left:0; top:0; width:5px; height:5px; background:#FFF; content:''; z-index:1; margin-top:21px; margin-left:7px; }
+        "}</style>
         <ul class="node-tree">
             <li>
                 <div class="neos-row-fluid">
@@ -67,10 +70,10 @@ prototype(NeosRulez.Acl:Module.RoleController.NodeTree) < prototype(Neos.Fusion:
                         &nbsp;
                     </div>
                     <div class="neos-span3" style="text-align:right">
-                        <span style="min-width:22px;display:inline-block;margin-right:4px;cursor:pointer" class="btn--trigger" id="btn__show">
+                        <span style="min-width:22px;display:inline-block;margin-right:15px;cursor:pointer" class="btn--trigger" id="btn__show">
                             <i class="far fa-eye"></i>
                         </span>
-                        <span style="min-width:22px;display:inline-block;margin-right:2px;cursor:pointer" class="btn--trigger" id="btn__edit">
+                        <span style="min-width:22px;display:inline-block;margin-right:10px;cursor:pointer" class="btn--trigger" id="btn__edit">
                             <i class="fas fa-pen"></i>
                         </span>
                         <span style="min-width:22px;display:inline-block;margin-right:8px;cursor:pointer" class="btn--trigger" id="btn__remove">
@@ -101,7 +104,10 @@ prototype(NeosRulez.Acl:Module.RoleController.NodeTree.NodeItem) < prototype(Neo
 
     renderer = afx`
         <div class="neos-row-fluid">
-            <div class="neos-span9 node-tree--item" style="padding-left:0 !important">
+            <div class="neos-span9 node-tree--item" style="padding-left:0 !important;position:relative;">
+                <div @if.render={props.item.hidden} class="is-hidden">
+                    <i class="fas fa-times-circle" style="color:#ff460d;position:absolute;left:0;bottom:0;font-size:10px;margin-left:5px;z-index:2"></i>
+                </div>
                 <i class={props.item.icon} ></i> {props.item.title}
             </div>
             <div class="neos-span3" style="text-align:right">
@@ -201,3 +207,73 @@ prototype(NeosRulez.Acl:Module.RoleController.ParentRoles) < prototype(Neos.Fusi
         </Neos.Fusion:Loop>
     `
 }
+
+//prototype(NeosRulez.Acl:Module.RoleController.NodeTypes) < prototype(Neos.Fusion:Component) {
+//
+//    renderer = afx`
+//        <ul class="nodetypes">
+//            <li>
+//                <div class="neos-row-fluid">
+//                    <div class="neos-span9">
+//                        &nbsp;
+//                    </div>
+//                    <div class="neos-span3" style="text-align:right">
+//                        <span style="min-width:22px;display:inline-block;margin-right:4px;cursor:pointer" class="btn--trigger" id="btn__show__nodetypes">
+//                            <i class="far fa-eye"></i>
+//                        </span>
+//                        <span style="min-width:22px;display:inline-block;margin-right:2px;cursor:pointer" class="btn--trigger" id="btn__edit__nodetypes">
+//                            <i class="fas fa-pen"></i>
+//                        </span>
+//                        <span style="min-width:22px;display:inline-block;margin-right:8px;cursor:pointer" class="btn--trigger" id="btn__remove__nodetypes">
+//                            <i class="fas fa-trash"></i>
+//                        </span>
+//                    </div>
+//                </div>
+//            </li>
+//
+//            <li>
+//                <ul class="nodetypes--items">
+//                    <Neos.Fusion:Loop items={nodeTypes} itemName="nodeType">
+//                        <li>
+//                            <NeosRulez.Acl:Module.RoleController.NodeTypes.NodeTypeItem item={nodeType} />
+//                        </li>
+//                    </Neos.Fusion:Loop>
+//                </ul>
+//            </li>
+//        </ul>
+//    `
+//}
+//
+//prototype(NeosRulez.Acl:Module.RoleController.NodeTypes.NodeTypeItem) < prototype(Neos.Fusion:Component) {
+//
+//    renderer = afx`
+//        <div class="neos-row-fluid">
+//            <div class="neos-span9 node-tree--item" style="padding-left:0 !important">
+//                <i class={props.item.icon} ></i> <span @if.render={I18n.translate(props.item.label)} >{I18n.translate(props.item.label)}</span> <span @if.render={!I18n.translate(props.item.label)}>{props.item.name}</span> <small style="color:#7b7b7b;display:block">{props.item.name}</small>
+//            </div>
+//            <div class="neos-span3" style="text-align:right">
+//                <div style="display:inline-block">
+//                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[show][' + props.item.name + ']'} >
+//                        <Neos.Fusion.Form:Checkbox field.value={props.item.name} attributes.data-id={props.item.name} attributes.class="btn--trigger checkbox checkbox--show" attributes.checked={privileges ? (privileges.show[props.item.name] ? true : false) : false} >
+//                            &nbsp;
+//                        </Neos.Fusion.Form:Checkbox>
+//                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+//                </div>
+//                <div style="display:inline-block">
+//                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[edit][' + props.item.name + ']'} >
+//                        <Neos.Fusion.Form:Checkbox field.value={props.item.name} attributes.data-id={props.item.name} attributes.class="btn--trigger checkbox checkbox--edit" attributes.checked={privileges ? (privileges.edit[props.item.name] ? true : false) : false} >
+//                            &nbsp;
+//                        </Neos.Fusion.Form:Checkbox>
+//                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+//                </div>
+//                <div style="display:inline-block">
+//                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[remove][' + props.item.name + ']'} >
+//                        <Neos.Fusion.Form:Checkbox field.value={props.item.name} attributes.data-id={props.item.name} attributes.class="btn--trigger checkbox checkbox--remove" attributes.checked={privileges ? (privileges.remove[props.item.name] ? true : false) : false} >
+//                            &nbsp;
+//                        </Neos.Fusion.Form:Checkbox>
+//                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+//                </div>
+//            </div>
+//        </div>
+//    `
+//}

@@ -44,9 +44,9 @@ class NodeService {
      */
     public function getNodes():array
     {
-        $context = $this->contextFactory->create();
+        $context = $this->contextFactory->create(array('invisibleContentShown' => true));
         $siteNode = $context->getCurrentSiteNode();
-        $nodes = (new FlowQuery(array($siteNode)))->find('[instanceof Neos.Neos:Document]')->sort('_index', 'ASC')->get();
+        $nodes = (new FlowQuery(array($siteNode)))->context(array('invisibleContentShown' => true))->find('[instanceof Neos.Neos:Document]')->sort('_index', 'ASC')->get();
         $result = $this->buildNodeTree($nodes, $siteNode);
         return $result;
     }
@@ -81,9 +81,9 @@ class NodeService {
      */
     public function createAclNodes(string $kind = 'Neos.Neos:Document'):void
     {
-        $context = $this->contextFactory->create();
+        $context = $this->contextFactory->create(array('invisibleContentShown' => true));
         $siteNode = $context->getCurrentSiteNode();
-        $nodes = (new FlowQuery(array($siteNode)))->find('[instanceof ' . $kind . ']')->sort('_index', 'ASC')->get();
+        $nodes = (new FlowQuery(array($siteNode)))->context(array('invisibleContentShown' => true))->find('[instanceof ' . $kind . ']')->sort('_index', 'ASC')->get();
         $this->nodeRepository->removeAll();
         foreach ($nodes as $node) {
             $aclNode = new \NeosRulez\Acl\Domain\Model\Node();
@@ -142,6 +142,7 @@ class NodeService {
             'identifier' => $node->getIdentifier(),
             'title' => $node->hasProperty('title') ? $node->getProperty('title') : false,
             'icon' => $this->getNodeTypeIcon($nodeTypeConfig),
+            'hidden' => $node->isHidden(),
             'parent' => $parent,
             'children' => $childs
         ];
