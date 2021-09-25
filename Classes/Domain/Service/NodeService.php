@@ -76,6 +76,19 @@ class NodeService {
     }
 
     /**
+     * @param \Neos\Flow\Persistence\Doctrine\QueryResult $nodes
+     * @return void
+     */
+    public function removeNodes(\Neos\Flow\Persistence\Doctrine\QueryResult $nodes):void
+    {
+        if(!empty($nodes)) {
+            foreach ($nodes as $node) {
+                $this->nodeRepository->remove($node);
+            }
+        }
+    }
+
+    /**
      * @param string $kind
      * @return void
      */
@@ -84,11 +97,12 @@ class NodeService {
         $context = $this->contextFactory->create(array('invisibleContentShown' => true));
         $siteNode = $context->getCurrentSiteNode();
         $nodes = (new FlowQuery(array($siteNode)))->context(array('invisibleContentShown' => true))->find('[instanceof ' . $kind . ']')->sort('_index', 'ASC')->get();
-        $this->nodeRepository->removeAll();
+        $this->removeNodes($this->nodeRepository->findBySiteNodePath($siteNode->getPath()));
         foreach ($nodes as $node) {
             $aclNode = new \NeosRulez\Acl\Domain\Model\Node();
             $aclNode->setNodeIdentifier($node->getIdentifier());
             $aclNode->setKind($kind);
+            $aclNode->setSiteNodePath($siteNode->getPath());
             $this->nodeRepository->add($aclNode);
             $this->persistenceManager->persistAll();
         }

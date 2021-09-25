@@ -57,6 +57,29 @@ class Node
     }
 
     /**
+     * @var string
+     * @Flow\Validate(type="NotEmpty")
+     */
+    protected $siteNodePath;
+
+    /**
+     * @return string
+     */
+    public function getSiteNodePath()
+    {
+        return $this->siteNodePath;
+    }
+
+    /**
+     * @param string $siteNodePath
+     * @return void
+     */
+    public function setSiteNodePath($siteNodePath)
+    {
+        $this->siteNodePath = $siteNodePath;
+    }
+
+    /**
      * @var \DateTime
      */
     protected $created;
