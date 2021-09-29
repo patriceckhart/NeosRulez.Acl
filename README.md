@@ -8,7 +8,7 @@ NeosRulez.Acl provides the missing access control list for Neos CMS. It allows t
 
 The NeosRulez.Acl package is listed on packagist (https://packagist.org/packages/neosrulez/acl) - therefore you don't have to include the package in your "repositories" entry any more.
 
-Just run ```composer require neosrulez/acl``` and ```./flow doctrine:update``` to create the database table.
+Just run ```composer require neosrulez/acl```
 
 ## Author
 
