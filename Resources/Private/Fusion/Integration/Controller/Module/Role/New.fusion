@@ -31,6 +31,9 @@ prototype(NeosRulez.Acl:Module.RoleController.New) < prototype(Neos.Fusion:Compo
                     <fieldset class="neos-span5">
                         <legend>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.parentRoles')}</legend>
                         <NeosRulez.Acl:Module.RoleController.ParentRoles @if.render={roles} />
+
+                        <legend>{I18n.translate('NeosRulez.Acl:Modules.Role.New:content.assetCollections')}</legend>
+                        <NeosRulez.Acl:Module.RoleController.AssetCollections @if.render={assetCollections} />
                     </fieldset>
 
                     <fieldset class="neos-span6 neos-offset1">
@@ -202,6 +205,19 @@ prototype(NeosRulez.Acl:Module.RoleController.ParentRoles) < prototype(Neos.Fusi
             <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'parentRoles[' + roleKey + ']'} >
                 <Neos.Fusion.Form:Checkbox field.value="1" attributes.checked={parentRoles[String.toString(role)]} >
                     {role}
+                </Neos.Fusion.Form:Checkbox>
+            </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+        </Neos.Fusion:Loop>
+    `
+}
+
+prototype(NeosRulez.Acl:Module.RoleController.AssetCollections) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <Neos.Fusion:Loop items={assetCollections} itemName="assetCollection" itemKey="assetCollectionKey" >
+            <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'assetCollections[' + assetCollectionKey + ']'} >
+                <Neos.Fusion.Form:Checkbox field.value={assetCollection.identifier} attributes.checked={privileges.assetCollections[assetCollection.identifier]} >
+                    {assetCollection.title}
                 </Neos.Fusion.Form:Checkbox>
             </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
         </Neos.Fusion:Loop>

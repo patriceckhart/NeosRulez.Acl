@@ -8,11 +8,17 @@
             <trans-unit id="content.parentRoles" xml:space="preserve">
 				<source>Übergeordnete Rollen</source>
 			</trans-unit>
+            <trans-unit id="content.assetCollections" xml:space="preserve">
+				<source>Medien-Sammlungen</source>
+			</trans-unit>
             <trans-unit id="content.created" xml:space="preserve">
 				<source>Erstellt</source>
 			</trans-unit>
             <trans-unit id="content.createNew" xml:space="preserve">
 				<source>Neue Rolle erstellen</source>
+			</trans-unit>
+            <trans-unit id="content.noAssetCollections" xml:space="preserve">
+				<source>Keine Medien-Sammlungen</source>
 			</trans-unit>
         </body>
     </file>

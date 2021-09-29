@@ -2,6 +2,7 @@
 namespace NeosRulez\Acl\Service;
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Configuration\Exception\InvalidConfigurationException;
 
 /**
  * @Flow\Scope("singleton")

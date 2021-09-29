@@ -8,11 +8,17 @@
             <trans-unit id="content.parentRoles" xml:space="preserve">
 				<source>Parent roles</source>
 			</trans-unit>
+            <trans-unit id="content.assetCollections" xml:space="preserve">
+				<source>Asset Collections</source>
+			</trans-unit>
             <trans-unit id="content.created" xml:space="preserve">
 				<source>Created</source>
 			</trans-unit>
             <trans-unit id="content.createNew" xml:space="preserve">
 				<source>Create new role</source>
+			</trans-unit>
+            <trans-unit id="content.noAssetCollections" xml:space="preserve">
+				<source>No Asset Collections</source>
 			</trans-unit>
         </body>
     </file>

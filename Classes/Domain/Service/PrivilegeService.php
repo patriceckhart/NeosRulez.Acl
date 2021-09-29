@@ -7,15 +7,13 @@ class PrivilegeService {
 
     /**
      * @param array $privileges
-     * @param array $showDeniedNodes
-     * @param array $editDeniedNodes
-     * @param array $removeDeniedNodes
+     * @param array $assetCollections
      * @return string
      */
-    public function privilegesToJson(array $privileges, array $showDeniedNodes, array $editDeniedNodes, array $removeDeniedNodes):string
+    public function privilegesToJson(array $privileges, array $assetCollections):string
     {
         $privilegeItems = [];
-        $result = '';
+        $assetCollectionItems = [];
         if(!empty($privileges)) {
             foreach ($privileges as $i => $privilege) {
                 foreach ($privilege as $privilegeItem) {
@@ -24,8 +22,17 @@ class PrivilegeService {
                     }
                 }
             }
-            $result = json_encode($privilegeItems, JSON_FORCE_OBJECT);
         }
+        $items = $privilegeItems;
+        if(!empty($assetCollections)) {
+            foreach ($assetCollections as $assetCollection) {
+                if($assetCollection != '') {
+                    $assetCollectionItems[] = $assetCollection;
+                }
+            }
+            $items['assetCollections'] = $assetCollectionItems;
+        }
+        $result = json_encode($items, JSON_FORCE_OBJECT);
         return $result;
     }
 
@@ -53,10 +60,34 @@ class PrivilegeService {
      * @param string $privilege
      * @return array
      */
-    public function createPrivilegeTarget(string $privilege):array
+    public function createPrivilegeTargetForNodes(string $privilege):array
     {
         $result = [
             'matcher' => 'isDescendantNodeOf("' . $privilege . '")'
+        ];
+        return $result;
+    }
+
+    /**
+     * @param string $privilege
+     * @return array
+     */
+    public function createPrivilegeTargetForAssetsInCollections(string $privilege):array
+    {
+        $result = [
+            'matcher' => 'hasId("' . $privilege . '")'
+        ];
+        return $result;
+    }
+
+    /**
+     * @param string $privilege
+     * @return array
+     */
+    public function createPrivilegeTargetForAssets(string $privilege):array
+    {
+        $result = [
+            'matcher' => 'isInCollection("' . $privilege . '")'
         ];
         return $result;
     }
@@ -74,6 +105,24 @@ class PrivilegeService {
             'privilegeTarget' => $internalRoleName . '.' . $mode . $privilegeIterator,
             'permission' => $permission
         ];
+        return $result;
+    }
+
+    /**
+     * @param array $grantedAssets
+     * @param string $grantedAsset
+     * @return bool
+     */
+    public function isGrantedPrivilege(array $grantedAssets, string $grantedAsset = ''):bool
+    {
+        $result = false;
+        if(!empty($grantedAssets) && $grantedAsset != '') {
+            foreach ($grantedAssets as $grantedAssetItem) {
+                if($grantedAsset == $grantedAssetItem) {
+                    $result = true;
+                }
+            }
+        }
         return $result;
     }
 

@@ -19,7 +19,9 @@ final class PolicyRegistry
         'Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege' => 'NeosRulez.Acl:EditAllNodes',
         'Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege' => 'NeosRulez.Acl:CreateAllNodes',
         'Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege' => 'NeosRulez.Acl:RemoveAllNodes',
-        'Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege' => 'NeosRulez.Acl:ReadAllNodes'
+        'Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege' => 'NeosRulez.Acl:ReadAllNodes',
+        'Neos\Media\Security\Authorization\Privilege\ReadAssetCollectionPrivilege' => 'NeosRulez.Acl:ReadAllAssetCollections',
+        'Neos\Media\Security\Authorization\Privilege\ReadAssetPrivilege' => 'NeosRulez.Acl:ReadAllAssets'
     ];
 
     /**

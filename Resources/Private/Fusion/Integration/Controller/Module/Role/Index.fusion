@@ -13,6 +13,7 @@ prototype(NeosRulez.Acl:Module.RoleController.Index) < prototype(Neos.Fusion:Com
                     <tr>
                         <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.name')}</td>
                         <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.parentRoles')}</td>
+                        <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.assetCollections')}</td>
                         <td>{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.created')}</td>
                         <td>&nbsp;</td>
                     </tr>
@@ -32,6 +33,18 @@ prototype(NeosRulez.Acl:Module.RoleController.Index) < prototype(Neos.Fusion:Com
                                             <span class="neos-badge">{parentRole}</span>
                                         </div>
                                     </Neos.Fusion:Loop>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="line-height:1.3rem;margin-top:10px;margin-bottom:10px">
+                                    <Neos.Fusion:Loop @if.render={item.assetCollections} items={item.assetCollections} itemName="assetCollection">
+                                        <div style="display:block;margin-right:2px">
+                                            <span class="neos-badge neos-badge-success">{assetCollection.title}</span>
+                                        </div>
+                                    </Neos.Fusion:Loop>
+                                    <div @if.render={!item.assetCollections} style="display:block;margin-right:2px">
+                                        <span class="neos-badge neos-badge-important">{I18n.translate('NeosRulez.Acl:Modules.Role.Index:content.noAssetCollections')}</span>
+                                    </div>
                                 </div>
                             </td>
                             <td>{Date.format(item.created, 'Y-m-d H:i')}</td>

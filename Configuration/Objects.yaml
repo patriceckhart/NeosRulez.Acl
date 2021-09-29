@@ -1,0 +1,9 @@
+NeosRulez\Acl\Controller\Module\RoleController:
+  properties:
+    flowMonitorCache:
+      object:
+        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryMethodName: getCache
+        arguments:
+          1:
+            value: Flow_Monitor

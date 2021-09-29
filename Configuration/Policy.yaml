@@ -14,6 +14,12 @@ privilegeTargets:
   'Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege':
     'NeosRulez.Acl:ReadAllNodes':
       matcher: 'TRUE'
+  'Neos\Media\Security\Authorization\Privilege\ReadAssetCollectionPrivilege':
+    'NeosRulez.Acl:ReadAllAssetCollections':
+      matcher: 'hasId("foo")'
+  'Neos\Media\Security\Authorization\Privilege\ReadAssetPrivilege':
+    'NeosRulez.Acl:ReadAllAssets':
+      matcher: 'isInCollection("foo")'
 roles:
   'Neos.Neos:Administrator':
     privileges:

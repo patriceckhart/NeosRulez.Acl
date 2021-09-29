@@ -20,6 +20,12 @@ class RoleController extends ActionController
     protected $contentCache;
 
     /**
+     * @var \Neos\Cache\Frontend\StringFrontend
+     * @Flow\Inject
+     */
+    protected $flowMonitorCache;
+
+    /**
      * @Flow\Inject
      * @var \NeosRulez\Acl\Domain\Repository\RoleRepository
      */
@@ -51,9 +57,21 @@ class RoleController extends ActionController
 
     /**
      * @Flow\Inject
+     * @var \NeosRulez\Acl\Domain\Service\AssetService
+     */
+    protected $assetService;
+
+    /**
+     * @Flow\Inject
      * @var \Neos\ContentRepository\Domain\Service\ContextFactoryInterface
      */
     protected $contextFactory;
+
+    /**
+     * @Flow\Inject
+     * @var \NeosRulez\Acl\Domain\Repository\NodeRepository
+     */
+    protected $nodeRepository;
 
 
     /**
@@ -66,6 +84,7 @@ class RoleController extends ActionController
             foreach ($roles as $role) {
                 $role->internalRoleName = 'NeosRulez.Acl:' . $this->roleService->cleanRoleName($role->getName());
                 $role->parentRolesArray = $role->getParentRoles() ? explode(',', $role->getParentRoles()) : [];
+                $role->assetCollections = $this->assetService->getAssetCollectionsByRole($role);
             }
         }
         $this->view->assign('roles', $roles);
@@ -78,19 +97,22 @@ class RoleController extends ActionController
     {
         $this->view->assign('roles', $this->policyService->getRoles());
         $this->view->assign('nodes', $this->nodeService->getNodes());
+        $this->view->assign('assetCollections', $this->assetService->getAssetCollections());
+
     }
 
     /**
      * @param Role $role
      * @param array $privileges
      * @param array $parentRoles
+     * @param array $assetCollections
      * @return void
      */
-    public function createAction(Role $role, array $privileges, array $parentRoles):void
+    public function createAction(Role $role, array $privileges, array $parentRoles, array $assetCollections):void
     {
         $this->nodeService->createAclNodes();
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
-        $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $this->nodeService->getDeniedNodes($privileges['show']), $this->nodeService->getDeniedNodes($privileges['edit']), $this->nodeService->getDeniedNodes($privileges['remove'])));
+        $role->setPrivileges($this->privilegeService->privilegesToJson($privileges , $assetCollections));
         $this->roleRepository->add($role);
         $this->flushContentCache();
         $this->redirect('index');
@@ -102,11 +124,11 @@ class RoleController extends ActionController
      */
     public function editAction(Role $role):void
     {
-        $this->view->assign('nodeTypes', $this->nodeService->getNodeTypes());
         $this->view->assign('roles', $this->policyService->getRoles());
         $this->view->assign('parentRoles', $this->roleService->rolesToArray($role->getParentRoles()));
         $this->view->assign('nodes', $this->nodeService->getNodes());
         $this->view->assign('privileges', $this->privilegeService->privilegesToArray($role->getPrivileges()));
+        $this->view->assign('assetCollections', $this->assetService->getAssetCollections());
         $this->view->assign('role', $role);
     }
 
@@ -114,13 +136,14 @@ class RoleController extends ActionController
      * @param Role $role
      * @param array $privileges
      * @param array $parentRoles
+     * @param array $assetCollections
      * @return void
      */
-    public function updateAction(Role $role, array $privileges, array $parentRoles):void
+    public function updateAction(Role $role, array $privileges, array $parentRoles, array $assetCollections):void
     {
         $this->nodeService->createAclNodes();
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
-        $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $this->nodeService->getDeniedNodes($privileges['show']), $this->nodeService->getDeniedNodes($privileges['edit']), $this->nodeService->getDeniedNodes($privileges['remove'])));
+        $role->setPrivileges($this->privilegeService->privilegesToJson($privileges , $assetCollections));
         $this->roleRepository->update($role);
         $this->flushContentCache();
         $this->redirect('index');
@@ -141,6 +164,7 @@ class RoleController extends ActionController
     protected function flushContentCache()
     {
         $this->contentCache->flush();
+        $this->flowMonitorCache->flush();
     }
 
 }
