@@ -191,15 +191,14 @@ class NodeService {
         $nodeTypes = $this->nodeTypeManager->getNodeTypes();
         foreach ($nodeTypes as $nodeType) {
             $nodeTypeName = $nodeType->getName();
-            $superTypes = array_key_exists('superTypes', $nodeType->getLocalConfiguration()) ? $nodeType->getLocalConfiguration()['superTypes'] : [];
-            if (array_key_exists('Neos.Neos:Content', $superTypes)) {
-                $pos1 = strpos($nodeTypeName, 'Neos.Neos');
-                $pos2 = strpos($nodeTypeName, 'Mixin');
-                if ($pos1 === false && $pos2 === false && $nodeTypeName != 'unstructured') {
+            $pos1 = strpos($nodeTypeName, 'Neos.Neos');
+            $pos2 = strpos($nodeTypeName, 'Mixin');
+            if ($pos1 === false && $pos2 === false && $nodeTypeName != 'unstructured') {
+                $icon = array_key_exists('ui', $nodeType->getLocalConfiguration()) ? ($nodeType->getLocalConfiguration()['ui'] != null ? $this->getNodeTypeIcon($nodeType->getLocalConfiguration()) : []) : [];
+                if($icon) {
                     $result[] = [
                         'name' => $nodeTypeName,
-                        'icon' => array_key_exists('ui', $nodeType->getLocalConfiguration()) ? ($nodeType->getLocalConfiguration()['ui'] != null ? $this->getNodeTypeIcon($nodeType->getLocalConfiguration()) : []) : [],
-                        'label' => array_key_exists('ui', $nodeType->getLocalConfiguration()) ? $nodeType->getLocalConfiguration()['ui'] != null ? array_key_exists('label', $nodeType->getLocalConfiguration()['ui']) ? $nodeType->getLocalConfiguration()['ui']['label'] : false : false : false
+                        'icon' => $icon,
                     ];
                 }
             }

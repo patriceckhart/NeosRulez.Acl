@@ -17,6 +17,9 @@
             <trans-unit id="content.assetCollections" xml:space="preserve">
 				<source>Medien-Sammlungen</source>
 			</trans-unit>
+            <trans-unit id="content.nodeTypes" xml:space="preserve">
+				<source>Bearbeitung von NodeTypes verhindern</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

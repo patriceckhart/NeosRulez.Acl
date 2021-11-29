@@ -82,7 +82,7 @@ class RoleGeneratorService {
 
                 array_push($role['parentRolesArray'], 'Neos.Neos:LivePublisher', 'Neos.Neos:RestrictedEditor', 'NeosRulez.Acl:AbstractEditor');
 
-                $deniedNodesShow= [];
+                $deniedNodesShow = [];
                 if(array_key_exists('show', $role['privilegesArray'])) {
                     $deniedNodesShow = $this->nodeService->getDeniedNodes($role['privilegesArray']['show']);
                 }
@@ -93,6 +93,10 @@ class RoleGeneratorService {
                 $deniedNodesRemove = [];
                 if(array_key_exists('remove', $role['privilegesArray'])) {
                     $deniedNodesRemove = $this->nodeService->getDeniedNodes($role['privilegesArray']['remove']);
+                }
+                $deniedNodeTypes = [];
+                if(array_key_exists('editNodeTypes', $role['privilegesArray'])) {
+                    $deniedNodeTypes = $role['privilegesArray']['editNodeTypes'];
                 }
                 $allAssetCollections = [];
                 $grantedAssetCollections = [];
@@ -119,6 +123,12 @@ class RoleGeneratorService {
                 if(!empty($deniedNodesRemove)) {
                     foreach ($deniedNodesRemove as $deniedNodeRemove) {
                         $privilegeItems['removeDenied'][] = $deniedNodeRemove;
+                    }
+                }
+                $privilegeItems['deniedNodeTypes'] = [];
+                if(!empty($deniedNodeTypes)) {
+                    foreach ($deniedNodeTypes as $deniedNodeType) {
+                        $privilegeItems['deniedNodeTypes'][] = $deniedNodeType;
                     }
                 }
                 $privilegeItems['deniedAssets'] = [];
@@ -152,6 +162,13 @@ class RoleGeneratorService {
                         foreach ($privileges as $privilegeIterator => $privilege) {
                             $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege'][$role['internalRoleName'] . '.Remove' . $privilegeIterator] = $this->privilegeService->createPrivilegeTargetForNodes($privilege);
                             $rolePrivileges[] = $this->privilegeService->createRolePrivilege($role['internalRoleName'], $privilegeIterator, 'Remove', 'DENY');
+                        }
+                    }
+
+                    if($i == 'deniedNodeTypes') {
+                        foreach ($privileges as $privilegeIterator => $privilege) {
+                            $customConfiguration['privilegeTargets']['Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege'][$role['internalRoleName'] . '.NodeTypeEdit' . $privilegeIterator] = $this->privilegeService->createPrivilegeTargetForNodeTypes($privilege);
+                            $rolePrivileges[] = $this->privilegeService->createRolePrivilege($role['internalRoleName'], $privilegeIterator, 'NodeTypeEdit', 'DENY');
                         }
                     }
 
@@ -192,6 +209,7 @@ class RoleGeneratorService {
         }
 
         $this->policyRegistry->registerPolicyAndMergeThemWithOriginal($customConfiguration, $configuration);
+
     }
 
 }

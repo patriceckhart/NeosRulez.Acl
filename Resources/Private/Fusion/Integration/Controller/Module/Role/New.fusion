@@ -12,10 +12,12 @@ prototype(NeosRulez.Acl:Module.RoleController.New) < prototype(Neos.Fusion:Compo
                 .node-tree--items { padding-left:20px !important; }
                 .node-tree--item { padding-top:10px !important; }
                 .node-tree--subitems { padding-left:20px !important; }
-                .nodetypes--items li { margin-top:10px !important; }
                 .node-tree li i, .node-tree--items li i, .node-tree--subitems li i, .nodetypes--items li i { width:20px !important; text-align:left !important; }
                 .node-tree { margin-left:0 !important; }
                 legend { padding-top:30px !important; margin-bottom:0px !important; display:block !important; }
+                .neos.neos-module .neos-ban-checkbox input+span::before { content:'\f00d' !important; }
+                .neos.neos-module .neos-ban-checkbox input:checked+span::before { background-color:#ff460d !important; border:1px solid #ff460d !important; }
+                .neos.neos-module .neos-ban-checkbox input:hover+span::before { border:1px solid #ff460d !important; }
             "}</style>
             <Neos.Fusion.Form:Form form.target.action={props.edit ? 'update' : 'create'} form.data.role={role} >
 
@@ -34,6 +36,9 @@ prototype(NeosRulez.Acl:Module.RoleController.New) < prototype(Neos.Fusion:Compo
 
                         <legend>{I18n.translate('NeosRulez.Acl:Modules.Role.New:content.assetCollections')}</legend>
                         <NeosRulez.Acl:Module.RoleController.AssetCollections @if.render={assetCollections} />
+
+                        <legend>{I18n.translate('NeosRulez.Acl:Modules.Role.New:content.nodeTypes')}</legend>
+                        <NeosRulez.Acl:Module.RoleController.NodeTypes @if.render={nodeTypes} />
                     </fieldset>
 
                     <fieldset class="neos-span6 neos-offset1">
@@ -224,72 +229,40 @@ prototype(NeosRulez.Acl:Module.RoleController.AssetCollections) < prototype(Neos
     `
 }
 
-//prototype(NeosRulez.Acl:Module.RoleController.NodeTypes) < prototype(Neos.Fusion:Component) {
-//
-//    renderer = afx`
-//        <ul class="nodetypes">
-//            <li>
-//                <div class="neos-row-fluid">
-//                    <div class="neos-span9">
-//                        &nbsp;
-//                    </div>
-//                    <div class="neos-span3" style="text-align:right">
-//                        <span style="min-width:22px;display:inline-block;margin-right:4px;cursor:pointer" class="btn--trigger" id="btn__show__nodetypes">
-//                            <i class="far fa-eye"></i>
-//                        </span>
-//                        <span style="min-width:22px;display:inline-block;margin-right:2px;cursor:pointer" class="btn--trigger" id="btn__edit__nodetypes">
-//                            <i class="fas fa-pen"></i>
-//                        </span>
-//                        <span style="min-width:22px;display:inline-block;margin-right:8px;cursor:pointer" class="btn--trigger" id="btn__remove__nodetypes">
-//                            <i class="fas fa-trash"></i>
-//                        </span>
-//                    </div>
-//                </div>
-//            </li>
-//
-//            <li>
-//                <ul class="nodetypes--items">
-//                    <Neos.Fusion:Loop items={nodeTypes} itemName="nodeType">
-//                        <li>
-//                            <NeosRulez.Acl:Module.RoleController.NodeTypes.NodeTypeItem item={nodeType} />
-//                        </li>
-//                    </Neos.Fusion:Loop>
-//                </ul>
-//            </li>
-//        </ul>
-//    `
-//}
-//
-//prototype(NeosRulez.Acl:Module.RoleController.NodeTypes.NodeTypeItem) < prototype(Neos.Fusion:Component) {
-//
-//    renderer = afx`
-//        <div class="neos-row-fluid">
-//            <div class="neos-span9 node-tree--item" style="padding-left:0 !important">
-//                <i class={props.item.icon} ></i> <span @if.render={I18n.translate(props.item.label)} >{I18n.translate(props.item.label)}</span> <span @if.render={!I18n.translate(props.item.label)}>{props.item.name}</span> <small style="color:#7b7b7b;display:block">{props.item.name}</small>
-//            </div>
-//            <div class="neos-span3" style="text-align:right">
-//                <div style="display:inline-block">
-//                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[show][' + props.item.name + ']'} >
-//                        <Neos.Fusion.Form:Checkbox field.value={props.item.name} attributes.data-id={props.item.name} attributes.class="btn--trigger checkbox checkbox--show" attributes.checked={privileges ? (privileges.show[props.item.name] ? true : false) : false} >
-//                            &nbsp;
-//                        </Neos.Fusion.Form:Checkbox>
-//                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
-//                </div>
-//                <div style="display:inline-block">
-//                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[edit][' + props.item.name + ']'} >
-//                        <Neos.Fusion.Form:Checkbox field.value={props.item.name} attributes.data-id={props.item.name} attributes.class="btn--trigger checkbox checkbox--edit" attributes.checked={privileges ? (privileges.edit[props.item.name] ? true : false) : false} >
-//                            &nbsp;
-//                        </Neos.Fusion.Form:Checkbox>
-//                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
-//                </div>
-//                <div style="display:inline-block">
-//                    <Neos.Fusion.Form:Neos.BackendModule.FieldContainer field.name={'privileges[remove][' + props.item.name + ']'} >
-//                        <Neos.Fusion.Form:Checkbox field.value={props.item.name} attributes.data-id={props.item.name} attributes.class="btn--trigger checkbox checkbox--remove" attributes.checked={privileges ? (privileges.remove[props.item.name] ? true : false) : false} >
-//                            &nbsp;
-//                        </Neos.Fusion.Form:Checkbox>
-//                    </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
-//                </div>
-//            </div>
-//        </div>
-//    `
-//}
+prototype(NeosRulez.Acl:Module.RoleController.NodeTypes) < prototype(Neos.Fusion:Component) {
+
+    renderer = afx`
+        <ul class="nodetypes">
+            <li>
+                <div class="neos-row-fluid">
+                    <div class="neos-span9">
+                        &nbsp;
+                    </div>
+                    <div class="neos-span3" style="text-align:right">
+                        <i class="fas fa-ban" style="margin-right:0.95rem"></i>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="nodetypes--items">
+            <Neos.Fusion:Loop items={nodeTypes} itemName="nodeType" >
+                <li>
+                    <div class="neos-row-fluid">
+                        <div class="neos-span9" style="margin-top:10px">
+                            <i class={nodeType.icon}></i> {nodeType.name}
+                        </div>
+                        <div class="neos-span3" style="text-align:right">
+                            <div style="display:inline-block">
+                                <Neos.Fusion.Form:Neos.BackendModule.FieldContainer attributes.class="neos-ban-checkbox" field.name={'privileges[editNodeTypes][' + nodeType.name + ']'} >
+                                    <Neos.Fusion.Form:Checkbox field.value={nodeType.name} attributes.data-id={nodeType.name} attributes.checked={privileges.editNodeTypes[nodeType.name]} >
+                                        &nbsp;
+                                    </Neos.Fusion.Form:Checkbox>
+                                </Neos.Fusion.Form:Neos.BackendModule.FieldContainer>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </Neos.Fusion:Loop>
+        </ul>
+    `
+}

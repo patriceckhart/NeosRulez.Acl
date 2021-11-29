@@ -98,7 +98,7 @@ class RoleController extends ActionController
         $this->view->assign('roles', $this->policyService->getRoles());
         $this->view->assign('nodes', $this->nodeService->getNodes());
         $this->view->assign('assetCollections', $this->assetService->getAssetCollections());
-
+        $this->view->assign('nodeTypes', $this->nodeService->getNodeTypes());
     }
 
     /**
@@ -130,6 +130,7 @@ class RoleController extends ActionController
         $this->view->assign('privileges', $this->privilegeService->privilegesToArray($role->getPrivileges()));
         $this->view->assign('assetCollections', $this->assetService->getAssetCollections());
         $this->view->assign('role', $role);
+        $this->view->assign('nodeTypes', $this->nodeService->getNodeTypes());
     }
 
     /**

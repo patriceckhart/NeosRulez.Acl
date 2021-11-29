@@ -5,11 +5,17 @@ privilegeTargets:
   'Neos\ContentRepository\Security\Authorization\Privilege\Node\EditNodePrivilege':
     'NeosRulez.Acl:EditAllNodes':
       matcher: 'TRUE'
+    'NeosRulez.Acl:EditAllNodeTypes':
+      matcher: 'TRUE'
   'Neos\ContentRepository\Security\Authorization\Privilege\Node\CreateNodePrivilege':
     'NeosRulez.Acl:CreateAllNodes':
       matcher: 'TRUE'
+    'NeosRulez.Acl:CreateAllNodeTypes':
+      matcher: 'TRUE'
   'Neos\ContentRepository\Security\Authorization\Privilege\Node\RemoveNodePrivilege':
     'NeosRulez.Acl:RemoveAllNodes':
+      matcher: 'TRUE'
+    'NeosRulez.Acl:RemoveAllNodeTypes':
       matcher: 'TRUE'
   'Neos\Neos\Security\Authorization\Privilege\NodeTreePrivilege':
     'NeosRulez.Acl:ReadAllNodes':
@@ -36,6 +42,15 @@ roles:
         privilegeTarget: 'NeosRulez.Acl:ReadAllNodes'
         permission: GRANT
       -
+        privilegeTarget: 'NeosRulez.Acl:EditAllNodeTypes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:CreateAllNodeTypes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:RemoveAllNodeTypes'
+        permission: GRANT
+      -
         privilegeTarget: 'NeosRulez.Acl:Backend.Module.Role'
         permission: GRANT
   'Neos.Neos:Editor':
@@ -52,6 +67,15 @@ roles:
       -
         privilegeTarget: 'NeosRulez.Acl:ReadAllNodes'
         permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:EditAllNodeTypes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:CreateAllNodeTypes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:RemoveAllNodeTypes'
+        permission: GRANT
   'NeosRulez.Acl:AbstractEditor':
     privileges:
       -
@@ -65,4 +89,13 @@ roles:
         permission: GRANT
       -
         privilegeTarget: 'NeosRulez.Acl:ReadAllNodes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:EditAllNodeTypes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:CreateAllNodeTypes'
+        permission: GRANT
+      -
+        privilegeTarget: 'NeosRulez.Acl:RemoveAllNodeTypes'
         permission: GRANT

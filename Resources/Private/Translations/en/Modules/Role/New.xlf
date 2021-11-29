@@ -17,6 +17,9 @@
             <trans-unit id="content.assetCollections" xml:space="preserve">
 				<source>Asset collections</source>
 			</trans-unit>
+            <trans-unit id="content.nodeTypes" xml:space="preserve">
+				<source>Prevent editing of NodeTypes</source>
+			</trans-unit>
         </body>
     </file>
 </xliff>

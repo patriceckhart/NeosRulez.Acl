@@ -72,6 +72,18 @@ class PrivilegeService {
      * @param string $privilege
      * @return array
      */
+    public function createPrivilegeTargetForNodeTypes(string $privilege):array
+    {
+        $result = [
+            'matcher' => 'nodeIsOfType("' . $privilege . '")'
+        ];
+        return $result;
+    }
+
+    /**
+     * @param string $privilege
+     * @return array
+     */
     public function createPrivilegeTargetForAssetsInCollections(string $privilege):array
     {
         $result = [
