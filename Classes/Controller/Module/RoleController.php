@@ -108,7 +108,7 @@ class RoleController extends ActionController
      * @param array $assetCollections
      * @return void
      */
-    public function createAction(Role $role, array $privileges, array $parentRoles, array $assetCollections):void
+    public function createAction(Role $role, array $privileges, array $parentRoles, array $assetCollections = []):void
     {
         $this->nodeService->createAclNodes();
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
@@ -140,11 +140,11 @@ class RoleController extends ActionController
      * @param array $assetCollections
      * @return void
      */
-    public function updateAction(Role $role, array $privileges, array $parentRoles, array $assetCollections):void
+    public function updateAction(Role $role, array $privileges, array $parentRoles, array $assetCollections = []):void
     {
         $this->nodeService->createAclNodes();
         $role->setParentRoles($this->roleService->rolesToString($parentRoles));
-        $role->setPrivileges($this->privilegeService->privilegesToJson($privileges , $assetCollections));
+        $role->setPrivileges($this->privilegeService->privilegesToJson($privileges, $assetCollections));
         $this->roleRepository->update($role);
         $this->flushContentCache();
         $this->redirect('index');
